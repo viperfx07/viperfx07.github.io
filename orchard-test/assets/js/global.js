@@ -3,15 +3,28 @@ var menuTree = (function($){
 	var module = {
 		$menuTree:null,
 
+		/**
+		 * Toggle (open/close) the node of the tree
+		 * @param node {Node} node object of the tree
+		 * @return {void}
+		 */
 		toggle: function(node){
 			var command = (node.is_open) ? 'closeNode' : 'openNode';
 			module.$menuTree.tree(command, node);
 		},
 
+		/**
+		 * Get the node by its id. The id can be retrieved from the node-id on the node DOM
+		 * @param  {Number} nodeId the id of the node
+		 * @return {Node} the node object
+		 */
 		getNodeById: function(nodeId){
 			return module.$menuTree.tree('getNodeById', nodeId);
 		},
 
+		/**
+		 * add a listener that toggle the node to the node itself
+		 */
 		addToggleListener: function(){
 			module.$menuTree.on('click', '.jqtree-custom-toggle', function(eq){
 				var nodeId = $(eq.target).parent().data('node-id');
@@ -20,7 +33,12 @@ var menuTree = (function($){
 			});
 		},
 
-		applySelected:function(children, isData){
+		/**
+		 * Add a selected class and open the node. This indicates the node and (probably its children) are selected
+		 * @param  {Array} the children/data that will be iterated. Can be the menuData or nodes
+		 * @return {void}
+		 */
+		applySelected:function(children){
 			if(typeof children !== 'undefined' && children !== null){
 
 				for (var i = 0, len = children.length; i<len; i++) {
@@ -37,6 +55,12 @@ var menuTree = (function($){
 			}
 		},
 
+		/**
+		 * Initialize the menu tree
+		 * @param  {jQuery} $el it's the list element (i.e. ul) that will be the menu tree
+		 * @param  {Array(JSONObject)} the data containing the structure of the tree
+		 * @return {void}
+		 */
 		init: function($el, menuData){
 			module.$menuTree = $el.tree({
 			    data: menuData,
@@ -50,7 +74,7 @@ var menuTree = (function($){
 			module.addToggleListener();
 
 			//selected class
-			module.applySelected(menuData, true);
+			module.applySelected(menuData);
 		}
 	};
 
@@ -157,8 +181,7 @@ $(function(){
 	    	label: 'Video Ezy'
 	    }
 	];
-
 	
+	//initialize the menu tree	
 	menuTree.init($('.tree-view'), menuData);
-	
 });
